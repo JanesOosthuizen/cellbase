@@ -5,6 +5,14 @@
 @push('styles')
 <style>
 .form-group textarea { min-height: 100px; resize: vertical; }
+.loan-device-wrap { position: relative; }
+.loan-device-input { width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; font-family: inherit; background: #fff; }
+.loan-device-input:focus { outline: none; border-color: #0ea5e9; box-shadow: 0 0 0 3px rgba(14,165,233,0.15); }
+.loan-device-dropdown { position: absolute; top: 100%; left: 0; right: 0; margin-top: 4px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-height: 220px; overflow-y: auto; z-index: 20; display: none; }
+.loan-device-dropdown.active { display: block; }
+.loan-device-option { padding: 10px 12px; cursor: pointer; font-size: 14px; color: #334155; border-bottom: 1px solid #f1f5f9; }
+.loan-device-option:hover { background: #f8fafc; }
+.loan-device-option.no-results { color: #94a3b8; cursor: default; }
 </style>
 @endpush
 
@@ -67,15 +75,12 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="loan_device_id">Loan Device (allocated to customer)</label>
-                <select id="loan_device_id" name="loan_device_id">
-                    <option value="">— None —</option>
-                    @foreach($loanDevices as $ld)
-                        <option value="{{ $ld->id }}" {{ old('loan_device_id', $repair->loan_device_id) == $ld->id ? 'selected' : '' }}>
-                            {{ $ld->device->product_code ?? '' }} {{ $ld->device->manufacturer ? $ld->device->manufacturer->name . ' ' : '' }}{{ $ld->device->model }}{{ $ld->imei ? ' (IMEI: ' . $ld->imei . ')' : '' }}
-                        </option>
-                    @endforeach
-                </select>
+                <label for="loan_device_search">Loan Device (allocated to customer)</label>
+                <div class="loan-device-wrap">
+                    <input type="text" id="loan_device_search" class="loan-device-input" autocomplete="off" placeholder="Type to search by device or IMEI...">
+                    <input type="hidden" name="loan_device_id" id="loan_device_id" value="{{ old('loan_device_id', $repair->loan_device_id) }}">
+                    <div id="loan_device_dropdown" class="loan-device-dropdown" role="listbox"></div>
+                </div>
             </div>
             <div class="form-group">
                 <label for="fault_description">Fault Description</label>
@@ -96,4 +101,56 @@
         </form>
     </div>
 </div>
+
+@push('scripts')
+<script>
+(function() {
+    var loanDevices = @json($loanDevices->map(function($ld) {
+        $label = trim(($ld->device->product_code ?? '') . ' ' . ($ld->device->manufacturer ? $ld->device->manufacturer->name . ' ' : '') . ($ld->device->model ?? '') . ($ld->imei ? ' (IMEI: ' . $ld->imei . ')' : ''));
+        return ['id' => $ld->id, 'label' => $label];
+    })->values());
+    var selectedId = {{ json_encode(old('loan_device_id', $repair->loan_device_id)) }};
+    var wrap = document.querySelector('.loan-device-wrap');
+    var input = document.getElementById('loan_device_search');
+    var hidden = document.getElementById('loan_device_id');
+    var dropdown = document.getElementById('loan_device_dropdown');
+
+    function renderList(filter) {
+        var term = (filter || '').toLowerCase().trim();
+        var list = term ? loanDevices.filter(function(d) { return d.label.toLowerCase().indexOf(term) !== -1; }) : loanDevices;
+        dropdown.innerHTML = '';
+        var opt = document.createElement('div');
+        opt.className = 'loan-device-option';
+        opt.textContent = '— None —';
+        opt.setAttribute('data-id', '');
+        opt.addEventListener('click', function() { hidden.value = ''; input.value = ''; dropdown.classList.remove('active'); });
+        dropdown.appendChild(opt);
+        if (list.length === 0 && term) {
+            var nr = document.createElement('div');
+            nr.className = 'loan-device-option no-results';
+            nr.textContent = 'No matching loan devices';
+            dropdown.appendChild(nr);
+        } else {
+            list.forEach(function(d) {
+                var el = document.createElement('div');
+                el.className = 'loan-device-option';
+                el.textContent = d.label;
+                el.setAttribute('data-id', d.id);
+                el.addEventListener('click', function() { hidden.value = d.id; input.value = d.label; dropdown.classList.remove('active'); });
+                dropdown.appendChild(el);
+            });
+        }
+        dropdown.classList.add('active');
+    }
+    input.addEventListener('focus', function() { renderList(input.value); });
+    input.addEventListener('input', function() { renderList(input.value); });
+    input.addEventListener('blur', function() { setTimeout(function() { dropdown.classList.remove('active'); }, 200); });
+    document.addEventListener('click', function(e) { if (wrap && !wrap.contains(e.target)) dropdown.classList.remove('active'); });
+    if (selectedId) {
+        var chosen = loanDevices.find(function(d) { return String(d.id) === String(selectedId); });
+        if (chosen) input.value = chosen.label;
+    }
+})();
+</script>
+@endpush
 @endsection
