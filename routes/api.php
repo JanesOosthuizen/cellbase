@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\RepairController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -13,4 +14,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+
+    Route::get('/repairs', [RepairController::class, 'index']);
+    Route::get('/repairs/{repair}', [RepairController::class, 'show']);
+    Route::post('/repairs', [RepairController::class, 'store']);
+    Route::put('/repairs/{repair}', [RepairController::class, 'update']);
+    Route::patch('/repairs/{repair}', [RepairController::class, 'update']);
 });

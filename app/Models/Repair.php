@@ -42,6 +42,13 @@ class Repair extends Model
     ];
 
     /**
+     * Accessors to append to JSON.
+     *
+     * @var list<string>
+     */
+    protected $appends = ['status_label'];
+
+    /**
      * Get the customer that owns the repair.
      */
     public function customer(): BelongsTo
