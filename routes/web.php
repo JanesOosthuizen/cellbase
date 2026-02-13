@@ -11,6 +11,7 @@ use App\Http\Controllers\RepairController;
 use App\Http\Controllers\RepairSettingsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GlobalSearchController;
+use App\Http\Controllers\LoanDeviceController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +41,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('external-users', ExternalUserController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('repairs', RepairController::class);
     Route::patch('repairs/{repair}/status', [RepairController::class, 'updateStatus'])->name('repairs.update-status');
+
+    Route::resource('loan-devices', LoanDeviceController::class);
     
     Route::get('/devices', [DeviceController::class, 'index'])->name('devices.index');
     Route::get('/devices/create', [DeviceController::class, 'create'])->name('devices.create');

@@ -74,6 +74,14 @@
                         —
                     @endif
                 </span>
+                <span class="detail-label">Loan Device</span>
+                <span class="detail-value">
+                    @if($repair->loanDevice)
+                        {{ $repair->loanDevice->device->product_code ?? '' }} {{ $repair->loanDevice->device->manufacturer ? $repair->loanDevice->device->manufacturer->name . ' ' : '' }}{{ $repair->loanDevice->device->model }}{{ $repair->loanDevice->imei ? ' (IMEI: ' . $repair->loanDevice->imei . ')' : '' }}
+                    @else
+                        —
+                    @endif
+                </span>
                 <span class="detail-label">Ticket Status</span>
                 <span class="detail-value"><span class="status-badge status-{{ $repair->ticket_status }}">{{ $repair->status_label }}</span></span>
                 <span class="detail-label">Date Booked</span>

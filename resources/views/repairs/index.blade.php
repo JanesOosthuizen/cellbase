@@ -24,6 +24,7 @@
                         <th>IMEI</th>
                         <th>Status</th>
                         <th>Allocated To</th>
+                        <th>Loan Device</th>
                         <th>Date Booked</th>
                     </tr>
                 </thead>
@@ -44,6 +45,13 @@
                             <td>
                                 @if($repair->allocatedTo)
                                     {{ $repair->allocatedTo->company ?: $repair->allocatedTo->name }}
+                                @else
+                                    —
+                                @endif
+                            </td>
+                            <td>
+                                @if($repair->loanDevice)
+                                    {{ $repair->loanDevice->device->model ?? '—' }}
                                 @else
                                     —
                                 @endif

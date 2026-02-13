@@ -3,7 +3,13 @@
         <a href="{{ route('dashboard') }}" class="app-nav__brand">{{ config('app.name', 'CellBase') }}</a>
         <ul class="app-nav__menu">
             <li><a href="{{ route('dashboard') }}" class="app-nav__link {{ request()->routeIs('dashboard') ? 'app-nav__link--active' : '' }}">Dashboard</a></li>
-            <li><a href="{{ route('repairs.index') }}" class="app-nav__link {{ request()->routeIs('repairs.*') ? 'app-nav__link--active' : '' }}">Repairs</a></li>
+            <li class="app-nav__dropdown">
+                <button type="button" class="app-nav__link app-nav__dropdown-trigger {{ request()->routeIs('repairs.*', 'loan-devices.*') ? 'app-nav__link--active' : '' }}" aria-expanded="false" aria-haspopup="true">Repairs</button>
+                <div class="app-nav__dropdown-menu" role="menu">
+                    <a href="{{ route('repairs.index') }}" class="app-nav__dropdown-item">Repairs</a>
+                    <a href="{{ route('loan-devices.index') }}" class="app-nav__dropdown-item">Loan Devices</a>
+                </div>
+            </li>
             <li class="app-nav__dropdown">
                 <button type="button" class="app-nav__link app-nav__dropdown-trigger {{ request()->routeIs('imeis.*') ? 'app-nav__link--active' : '' }}" aria-expanded="false" aria-haspopup="true">Imeis</button>
                 <div class="app-nav__dropdown-menu" role="menu">

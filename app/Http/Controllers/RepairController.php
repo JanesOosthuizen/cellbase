@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\ExternalUser;
+use App\Models\LoanDevice;
 use App\Models\Repair;
 use App\Models\RepairEvent;
 use Illuminate\Http\Request;
@@ -15,7 +16,7 @@ class RepairController extends Controller
      */
     public function index()
     {
-        $repairs = Repair::with(['customer', 'allocatedTo'])
+        $repairs = Repair::with(['customer', 'allocatedTo', 'loanDevice.device.manufacturer'])
             ->orderByDesc('created_at')
             ->paginate(20);
 
@@ -29,10 +30,12 @@ class RepairController extends Controller
     {
         $customers = Customer::orderBy('surname')->orderBy('name')->get();
         $externalUsers = ExternalUser::orderBy('company')->orderBy('surname')->orderBy('name')->get();
+        $loanDevices = LoanDevice::with('device.manufacturer')->orderByDesc('created_at')->get();
 
         return view('repairs.create', [
             'customers' => $customers,
             'externalUsers' => $externalUsers,
+            'loanDevices' => $loanDevices,
         ]);
     }
 
@@ -48,6 +51,7 @@ class RepairController extends Controller
             'cell_nr' => ['nullable', 'string', 'max:255'],
             'contact_nr' => ['nullable', 'string', 'max:255'],
             'allocated_to' => ['nullable', 'integer', 'exists:external_users,id'],
+            'loan_device_id' => ['nullable', 'integer', 'exists:loan_devices,id'],
             'fault_description' => ['nullable', 'string', 'max:5000'],
             'ticket_status' => ['nullable', 'string', 'in:booked_in,sent_away,received,completed,collected'],
         ]);
@@ -72,10 +76,11 @@ class RepairController extends Controller
      */
     public function show(Repair $repair)
     {
-        $repair->load(['customer', 'allocatedTo', 'events.user']);
+        $repair->load(['customer', 'allocatedTo', 'loanDevice.device.manufacturer', 'events.user']);
         $externalUsers = ExternalUser::orderBy('company')->orderBy('surname')->orderBy('name')->get();
+        $loanDevices = LoanDevice::with('device.manufacturer')->orderByDesc('created_at')->get();
 
-        return view('repairs.show', compact('repair', 'externalUsers'));
+        return view('repairs.show', compact('repair', 'externalUsers', 'loanDevices'));
     }
 
     /**
@@ -85,11 +90,13 @@ class RepairController extends Controller
     {
         $customers = Customer::orderBy('surname')->orderBy('name')->get();
         $externalUsers = ExternalUser::orderBy('company')->orderBy('surname')->orderBy('name')->get();
+        $loanDevices = LoanDevice::with('device.manufacturer')->orderByDesc('created_at')->get();
 
         return view('repairs.edit', [
             'repair' => $repair,
             'customers' => $customers,
             'externalUsers' => $externalUsers,
+            'loanDevices' => $loanDevices,
         ]);
     }
 
@@ -105,6 +112,7 @@ class RepairController extends Controller
             'cell_nr' => ['nullable', 'string', 'max:255'],
             'contact_nr' => ['nullable', 'string', 'max:255'],
             'allocated_to' => ['nullable', 'integer', 'exists:external_users,id'],
+            'loan_device_id' => ['nullable', 'integer', 'exists:loan_devices,id'],
             'fault_description' => ['nullable', 'string', 'max:5000'],
             'ticket_status' => ['nullable', 'string', 'in:booked_in,sent_away,received,completed,collected'],
         ]);

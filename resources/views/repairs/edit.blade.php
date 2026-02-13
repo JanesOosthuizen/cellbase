@@ -67,6 +67,17 @@
                 </select>
             </div>
             <div class="form-group">
+                <label for="loan_device_id">Loan Device (allocated to customer)</label>
+                <select id="loan_device_id" name="loan_device_id">
+                    <option value="">— None —</option>
+                    @foreach($loanDevices as $ld)
+                        <option value="{{ $ld->id }}" {{ old('loan_device_id', $repair->loan_device_id) == $ld->id ? 'selected' : '' }}>
+                            {{ $ld->device->product_code ?? '' }} {{ $ld->device->manufacturer ? $ld->device->manufacturer->name . ' ' : '' }}{{ $ld->device->model }}{{ $ld->imei ? ' (IMEI: ' . $ld->imei . ')' : '' }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="fault_description">Fault Description</label>
                 <textarea id="fault_description" name="fault_description">{{ old('fault_description', $repair->fault_description) }}</textarea>
             </div>

@@ -17,7 +17,7 @@ class RepairController extends Controller
     {
         $perPage = min((int) $request->input('per_page', 20), 100);
 
-        $repairs = Repair::with(['customer', 'allocatedTo'])
+        $repairs = Repair::with(['customer', 'allocatedTo', 'loanDevice.device.manufacturer'])
             ->orderByDesc('created_at')
             ->paginate($perPage);
 
@@ -29,7 +29,7 @@ class RepairController extends Controller
      */
     public function show(Repair $repair): JsonResponse
     {
-        $repair->load(['customer', 'allocatedTo', 'events.user']);
+        $repair->load(['customer', 'allocatedTo', 'loanDevice.device.manufacturer', 'events.user']);
 
         return response()->json($repair);
     }
@@ -46,6 +46,7 @@ class RepairController extends Controller
             'cell_nr' => ['nullable', 'string', 'max:255'],
             'contact_nr' => ['nullable', 'string', 'max:255'],
             'allocated_to' => ['nullable', 'integer', 'exists:external_users,id'],
+            'loan_device_id' => ['nullable', 'integer', 'exists:loan_devices,id'],
             'fault_description' => ['nullable', 'string', 'max:5000'],
             'ticket_status' => ['nullable', 'string', 'in:booked_in,sent_away,received,completed,collected'],
         ]);
@@ -61,7 +62,7 @@ class RepairController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        $repair->load(['customer', 'allocatedTo']);
+        $repair->load(['customer', 'allocatedTo', 'loanDevice.device.manufacturer']);
 
         return response()->json($repair, 201);
     }
@@ -78,6 +79,7 @@ class RepairController extends Controller
             'cell_nr' => ['nullable', 'string', 'max:255'],
             'contact_nr' => ['nullable', 'string', 'max:255'],
             'allocated_to' => ['nullable', 'integer', 'exists:external_users,id'],
+            'loan_device_id' => ['nullable', 'integer', 'exists:loan_devices,id'],
             'fault_description' => ['nullable', 'string', 'max:5000'],
             'ticket_status' => ['nullable', 'string', 'in:booked_in,sent_away,received,completed,collected'],
         ]);
@@ -98,7 +100,7 @@ class RepairController extends Controller
             ]);
         }
 
-        $repair->load(['customer', 'allocatedTo']);
+        $repair->load(['customer', 'allocatedTo', 'loanDevice.device.manufacturer']);
 
         return response()->json($repair);
     }

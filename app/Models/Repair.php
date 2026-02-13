@@ -37,6 +37,7 @@ class Repair extends Model
         'cell_nr',
         'contact_nr',
         'allocated_to',
+        'loan_device_id',
         'fault_description',
         'ticket_status',
     ];
@@ -62,6 +63,14 @@ class Repair extends Model
     public function allocatedTo(): BelongsTo
     {
         return $this->belongsTo(ExternalUser::class, 'allocated_to');
+    }
+
+    /**
+     * Get the loan device allocated to the customer for this repair.
+     */
+    public function loanDevice(): BelongsTo
+    {
+        return $this->belongsTo(LoanDevice::class);
     }
 
     /**
