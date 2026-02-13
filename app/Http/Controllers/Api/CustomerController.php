@@ -35,4 +35,16 @@ class CustomerController extends Controller
 
         return response()->json($customers);
     }
+
+    /**
+     * Show a single customer. Optionally include repairs via ?with=repairs.
+     */
+    public function show(Request $request, Customer $customer): JsonResponse
+    {
+        if ($request->boolean('with_repairs') || $request->input('with') === 'repairs') {
+            $customer->load(['repairs' => fn ($q) => $q->orderByDesc('created_at')]);
+        }
+
+        return response()->json($customer);
+    }
 }

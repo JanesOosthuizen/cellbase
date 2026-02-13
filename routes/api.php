@@ -24,5 +24,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/repairs/{repair}', [RepairController::class, 'update']);
 
     Route::get('/customers', [CustomerController::class, 'index']);
+    Route::get('/customers/{customer}', [CustomerController::class, 'show']);
     Route::get('/devices', [DeviceController::class, 'index']);
 });
