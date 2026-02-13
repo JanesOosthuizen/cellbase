@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CustomerController;
+use App\Http\Controllers\Api\DeviceController;
 use App\Http\Controllers\Api\RepairController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,4 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/repairs', [RepairController::class, 'store']);
     Route::put('/repairs/{repair}', [RepairController::class, 'update']);
     Route::patch('/repairs/{repair}', [RepairController::class, 'update']);
+
+    Route::get('/customers', [CustomerController::class, 'index']);
+    Route::get('/devices', [DeviceController::class, 'index']);
 });
