@@ -39,10 +39,10 @@
                             <td>{{ $device->bar_code ?? '-' }}</td>
                             <td>{{ $device->manufacturer ? $device->manufacturer->name : '-' }}</td>
                             <td>{{ $device->model }}</td>
-                            <td class="text-right">{{ $device->cost_excl ? '$' . number_format($device->cost_excl, 2) : '-' }}</td>
-                            <td class="text-right">{{ $device->cost_incl ? '$' . number_format($device->cost_incl, 2) : '-' }}</td>
-                            <td class="text-right">{{ $device->rsp_excl ? '$' . number_format($device->rsp_excl, 2) : '-' }}</td>
-                            <td class="text-right">{{ $device->rsp_incl ? '$' . number_format($device->rsp_incl, 2) : '-' }}</td>
+                            <td class="text-right">{{ $device->cost_excl ? config('app.currency_symbol') . ' ' . number_format($device->cost_excl, 2) : '-' }}</td>
+                            <td class="text-right">{{ $device->cost_incl ? config('app.currency_symbol') . ' ' . number_format($device->cost_incl, 2) : '-' }}</td>
+                            <td class="text-right">{{ $device->rsp_excl ? config('app.currency_symbol') . ' ' . number_format($device->rsp_excl, 2) : '-' }}</td>
+                            <td class="text-right">{{ $device->rsp_incl ? config('app.currency_symbol') . ' ' . number_format($device->rsp_incl, 2) : '-' }}</td>
                             <td>{{ $device->created_at->format('M j, Y') }}</td>
                         </tr>
                     @endforeach

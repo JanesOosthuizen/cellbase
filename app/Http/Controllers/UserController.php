@@ -113,9 +113,7 @@ class UserController extends Controller
             ]);
         }
 
-        if (isset($validated['roles'])) {
-            $user->roles()->sync($validated['roles']);
-        }
+        $user->roles()->sync($validated['roles'] ?? []);
 
         return redirect()->route('users.index')
             ->with('success', 'User updated successfully.');

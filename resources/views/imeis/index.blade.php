@@ -43,7 +43,7 @@
                             </td>
                             <td>
                                 @if($imei->price)
-                                    R {{ number_format($imei->price, 2) }}
+                                    {{ config('app.currency_symbol') }} {{ number_format($imei->price, 2) }}
                                 @else
                                     -
                                 @endif

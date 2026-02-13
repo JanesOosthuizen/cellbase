@@ -26,7 +26,7 @@
         <div class="settings-section">
             <h2>Item Management</h2>
             <ul class="settings-links">
-                <li><a href="#">Manage Company Users</a></li>
+                <li><a href="{{ route('users.index') }}">Manage System Users</a></li>
                 <li><a href="{{ route('manufacturers.index') }}">Manage Manufacturers</a></li>
                 <li><a href="{{ route('devices.index') }}">Manage Devices</a></li>
             </ul>

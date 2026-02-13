@@ -9,7 +9,10 @@ use App\Http\Controllers\ManufacturerController;
 use App\Http\Controllers\ExternalUserController;
 use App\Http\Controllers\RepairController;
 use App\Http\Controllers\RepairSettingsController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GlobalSearchController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -23,13 +26,13 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Protected Routes
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
     
     Route::get('/settings', function () {
         return view('settings');
     })->name('settings');
+
+    Route::resource('users', UserController::class)->except(['show']);
     Route::get('/settings/repairs', [RepairSettingsController::class, 'edit'])->name('settings.repairs.edit');
     Route::put('/settings/repairs', [RepairSettingsController::class, 'update'])->name('settings.repairs.update');
     
@@ -63,4 +66,5 @@ Route::middleware('auth')->group(function () {
     
     // API Routes for AJAX
     Route::post('/api/check-imei', [ImeiController::class, 'checkImei'])->name('api.check-imei');
+    Route::get('/api/global-search', GlobalSearchController::class)->name('api.global-search');
 });

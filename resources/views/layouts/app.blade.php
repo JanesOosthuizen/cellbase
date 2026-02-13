@@ -165,6 +165,69 @@
             transition: color 0.15s;
         }
         .app-nav__logout:hover { color: var(--nav-text-hover); }
+        .app-nav__search {
+            position: relative;
+            flex: 1;
+            max-width: 320px;
+            margin-left: 16px;
+        }
+        .app-nav__search-input {
+            width: 100%;
+            padding: 8px 14px;
+            border: 1px solid var(--nav-border);
+            border-radius: 8px;
+            background: rgba(30, 41, 59, 0.6);
+            color: var(--nav-text-hover);
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.15s, background 0.15s;
+        }
+        .app-nav__search-input::placeholder { color: var(--nav-text); opacity: 0.8; }
+        .app-nav__search-input:focus {
+            outline: none;
+            border-color: var(--nav-active);
+            background: rgba(30, 41, 59, 0.8);
+        }
+        .app-nav__search-wrap { position: relative; }
+        .app-nav__search-dropdown {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            max-height: 70vh;
+            overflow-y: auto;
+            background: #1e293b;
+            border: 1px solid var(--nav-border);
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            padding: 8px;
+            z-index: 200;
+            display: none;
+        }
+        .app-nav__search-dropdown.is-open { display: block; }
+        .app-nav__search-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--nav-text);
+            padding: 6px 10px 4px;
+            margin-top: 4px;
+        }
+        .app-nav__search-section-title:first-child { margin-top: 0; }
+        .app-nav__search-item {
+            display: block;
+            padding: 10px 12px;
+            color: var(--nav-text-hover);
+            text-decoration: none;
+            font-size: 14px;
+            border-radius: 6px;
+            transition: background 0.15s, color 0.15s;
+        }
+        .app-nav__search-item:hover { background: rgba(255,255,255,0.08); color: #fff; }
+        .app-nav__search-item-label { font-weight: 500; }
+        .app-nav__search-item-sub { font-size: 12px; color: var(--nav-text); margin-top: 2px; }
+        .app-nav__search-empty { padding: 16px; color: var(--nav-text); font-size: 14px; text-align: center; }
         .app-main {
             max-width: 1400px;
             margin: 0 auto;

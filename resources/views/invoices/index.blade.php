@@ -32,7 +32,7 @@
                         <tr>
                             <td>{{ $invoice->invoice_nr }}</td>
                             <td>{{ $invoice->invoice_date->format('M j, Y') }}</td>
-                            <td class="text-right">${{ number_format($invoice->invoice_total_excl, 2) }}</td>
+                            <td class="text-right">{{ config('app.currency_symbol') }} {{ number_format($invoice->invoice_total_excl, 2) }}</td>
                             <td>{{ $invoice->invoiceLines->count() }}</td>
                             <td>
                                 <span class="badge badge-{{ $invoice->status }}">
